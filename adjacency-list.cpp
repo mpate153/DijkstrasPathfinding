@@ -158,7 +158,7 @@ public:
         }
     }
 
-    int numVertices() {
+    int vertexCount() {
         return adj.size();
     }
     

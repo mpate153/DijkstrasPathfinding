@@ -10,7 +10,7 @@ using namespace std;
 void adjList() {
 
     string fileName;
-    cout << "Input filename.txt" << endl;
+    cout << "Enter filename (.txt)" << endl;
     cin >> fileName;
 
     ifstream file(fileName);
@@ -24,12 +24,20 @@ void adjList() {
 
     double totalListMS = 0.0;
 
-    while (true) {
+    char showMat = 'n';
+    cout << "Print the weighted adjacency table? (y/n): " << endl;
+    cin >> showMat;
+    if (showMat == 'y' || showMat == 'Y') {
         adj.printContents();
+    }
+
+    cout << "Enter source and destination (0 .. " << adj.vertexCount() - 1 << "), or -1 to quit." << endl;
+
+    while (true) {
 
         int s;
         int t;
-        cout << "Please enter source and destination vertices" << endl;
+        cout << "Enter source and destination vertices" << endl;
         if (!(cin >> s >> t)) {
             break;
         }
@@ -37,7 +45,7 @@ void adjList() {
             break;
         }
 
-        if (s < 0 || t < 0 || s > adj.numVertices() || t > adj.numVertices()) {
+        if (s < 0 || t < 0 || s >= adj.vertexCount() || t >= adj.vertexCount()) {
             cout << "Invalid vertices. Please use values from the list." << endl;
             continue;
         }
@@ -47,21 +55,12 @@ void adjList() {
 
         double ms = adj.dijkstra(s, dist, prev);
 
-        cout << "Query time for adjacency list: " << ms << endl; //Prints in milliseconds the time the algorithm took
-        totalListMS += ms;
-        cout << "Total time for all adjacency list queries: " << totalListMS << endl;
-
-        //prints the shortest distance from s to each vertext
-        for (int i = 0; i < dist.size(); i++) {
-            if (dist[i] == INT_MAX) { //if dist still equals INT_MAX, then no path to s was found
-                cout << "Vertex " << i << " has no path from " << s << endl;
-            }
-            else {
-                cout << "Vertex " << i << "'s shortest distance from " << s << " is " << dist[i] << endl;
-            }
+        if (dist[t] == INT_MAX) {
+            cout << "No path from " << s << " to " << t << "." << endl;
         }
+        else {
+            cout << "Shortest distance: " << dist[t] << endl;
 
-        if (dist[t] != INT_MAX) { //will print the path to t if one was found
             int i = t;
             vector<int> path;
             path.push_back(i); //a vector will be made containing the shortest path from s to t
@@ -71,7 +70,7 @@ void adjList() {
             } while (i != s);
 
             //after making the vector, the shortest path is printed
-            cout << "The shortest path from " << s << " to " << t << " is: ";
+            cout << "Path: ";
             for (int j = path.size() - 1; j >= 0; j--) {
                 cout << path[j];
                 if (j != 0) {
@@ -80,10 +79,13 @@ void adjList() {
             }
             cout << endl;
         }
-        else {
-            cout << "A path from " << s << " to " << t << " could not be found" << endl;
-        }
+
+        cout << "(adjacency list Dijkstra time this query: " << ms << " ms)\n\n"; //Prints in milliseconds the time the algorithm took
+
+        totalListMS += ms;
     }
+
+    cout << "\nTotal time in adjacency-list Dijkstra (all queries): " << totalListMS << " ms\n";
 
 
     file.close();
