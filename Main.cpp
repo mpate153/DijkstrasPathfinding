@@ -6,7 +6,8 @@
 
 using namespace std;
 
-int main() {
+
+void adjList() {
 
     string fileName;
     cout << "Input filename.txt" << endl;
@@ -16,7 +17,7 @@ int main() {
 
     if (!file.is_open()) {
         cerr << "Error opening file!" << endl;
-        return 1;
+        return;
     }
 
     AdjacencyList adj(file);
@@ -86,6 +87,10 @@ int main() {
 
 
     file.close();
+}
 
-	return 0;
+int main() {
+    adjList();
+    
+    return 0;
 }
